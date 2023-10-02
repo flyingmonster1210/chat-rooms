@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const connectDB = require('./db')
 const colors = require('colors')
+const requestInfo = require('./middlewares/normal')
 const dotenv = require('dotenv').config()
 
 const port = process.env.PORT
@@ -12,6 +13,8 @@ app.listen(port, () => {
 })
 
 connectDB()
+
+app.use(requestInfo)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))

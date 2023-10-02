@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "client": "npm run start --prefix client",
+    "server": "npm run server --prefix server"
+  },
+  "author": "Wayne Zeng",
+  "license": "ISC"
+}

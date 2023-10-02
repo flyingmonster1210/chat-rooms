@@ -18,14 +18,11 @@ function Login() {
 
     const check = formIsValid()
     if (check.result) {
-      toast.success(check.message, {
-        POSITION: toast.TOP_RIGHT,
-        autoClose: 1500,
-      })
+      navigate('/register/')
     } else {
       toast.error(check.message, {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 3000,
+        position: toast.POSITION.BOTTOM_RIGHT,
+        autoClose: 4000,
       })
     }
   }
