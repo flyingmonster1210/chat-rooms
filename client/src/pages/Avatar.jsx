@@ -50,7 +50,6 @@ function Avatar() {
         position: toast.POSITION.BOTTOM_RIGHT,
       })
     }
-    // default img: '0.982110407122879'
   }
 
   const getNewAvatars = () => {

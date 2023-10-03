@@ -12,11 +12,10 @@ const register = async (req, res, next) => {
     if (body && body.username && body.password && body.email) {
       if (!await User.findOne({ username: body.username })) {
         if (!await User.findOne({ email: body.email })) {
-          const newUser = User.create({
+          const newUser = await User.create({
             ...body,
             password: hashPassword,
           })
-          delete newUser.password
           res.json({
             status: true,
             message: newUser
@@ -34,8 +33,8 @@ const register = async (req, res, next) => {
       message: message,
     })
   } catch (error) {
-    console.error(error)
-    next(error)
+    console.error(error.message)
+    next(error.message)
   }
 }
 

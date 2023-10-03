@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, 'Please add an email'],
+  },
+  avatar: {
+    type: String,
+    default: '0.982110407122879'
   }
 },
   {
