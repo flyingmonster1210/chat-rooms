@@ -18,7 +18,7 @@ const register = async (req, res, next) => {
           })
           delete newUser.password
           res.json({
-            statue: true,
+            status: true,
             message: newUser
           })
         } else {
@@ -30,7 +30,7 @@ const register = async (req, res, next) => {
     }
 
     res.json({
-      statue: false,
+      status: false,
       message: message,
     })
   } catch (error) {
@@ -50,7 +50,7 @@ const login = async (req, res, next) => {
         if (await bcrypt.compare(body.password, user.password)) {
           delete user.password
           res.json({
-            statue: true,
+            status: true,
             message: {
               username: user.username,
               email: user.email,
@@ -65,7 +65,7 @@ const login = async (req, res, next) => {
     }
 
     res.json({
-      statue: false,
+      status: false,
       message: message,
     })
   } catch (error) {

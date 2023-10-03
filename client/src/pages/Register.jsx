@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { styles } from '../style'
 import logo from '../assets/java-script.png'
+import userServices from '../services/userServices'
 
 function Register() {
   const navigate = useNavigate()
@@ -15,19 +16,28 @@ function Register() {
     comfirmPassword: '',
   })
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const check = formIsValid()
-    if (check.result) {
-      navigate('/avatar/')
-    } else {
-      toast.error(check.message, {
+    try {
+      const check = formIsValid()
+      if (check.result) {
+        await userServices.register(user)
+        navigate('/')
+      } else {
+        toast.error(check.message, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: 4000,
+        })
+      }
+    } catch (error) {
+      console.error(error.message)
+      toast.error(error.message, {
         position: toast.POSITION.BOTTOM_RIGHT,
-        autoClose: 4000,
       })
     }
   }
+
   const formIsValid = () => {
     if (!user.username) {
       return {
@@ -121,8 +131,9 @@ function Register() {
           <div>
             <span className="">ALREADY HAVE AN ACCOUNT? </span>
             <button
-              onClick={() => {
-                navigate('/login/')
+              onClick={(e) => {
+                e.preventDefault()
+                navigate('/login')
               }}
               className="text-blue-800 font-bold hover:underline"
             >
