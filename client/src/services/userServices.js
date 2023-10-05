@@ -7,7 +7,7 @@ const register = async ({ username, email, password }) => {
   try {
     const { data } = await axios.post(BASE_URL + '/register', { username, email, password })
     if (data.status) {
-      localStorage.setItem(LOCAL_KEY_USER, JSON.stringify(data.message))
+      // localStorage.setItem(LOCAL_KEY_USER, JSON.stringify(data.message))
       return data.message
     } else {
       throw new Error(data.message)
@@ -41,7 +41,7 @@ const login = async ({ username, password, checkbox }) => {
 const userServices = {
   register,
   login,
-  localUserData
+  localUserData,
 }
 
 export default userServices

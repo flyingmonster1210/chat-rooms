@@ -12,13 +12,17 @@ const register = async (req, res, next) => {
     if (body && body.username && body.password && body.email) {
       if (!await User.findOne({ username: body.username })) {
         if (!await User.findOne({ email: body.email })) {
-          const newUser = await User.create({
+          const { username, email, avatar } = await User.create({
             ...body,
             password: hashPassword,
           })
           res.json({
             status: true,
-            message: newUser
+            message: {
+              username,
+              email,
+              avatar,
+            }
           })
         } else {
           message = 'This email address has been used.'
