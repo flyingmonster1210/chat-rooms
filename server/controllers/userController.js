@@ -91,7 +91,7 @@ const setAvatar = async (req, res, next) => {
       if (avatar) {
         return res.json({
           status: true,
-          message: avatar,
+          message: body.avatar,
         })
       } else {
         message = 'No new avatar returned from mongoDB.'

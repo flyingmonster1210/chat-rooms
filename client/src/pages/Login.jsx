@@ -15,8 +15,8 @@ function Login() {
   })
   const [checkbox, setCheckbox] = useState(false)
 
-  useEffect(() => {
-    const localUserData = userServices.localUserData()
+  const setUpRemeberMe = async () => {
+    const localUserData = await userServices.getLocalUserData()
     if (localUserData && localUserData.username && localUserData.password) {
       setCheckbox(true)
       setUser({
@@ -24,6 +24,9 @@ function Login() {
         password: localUserData.password,
       })
     }
+  }
+  useEffect(() => {
+    setUpRemeberMe()
   }, [])
 
   const handleSubmit = async (e) => {
@@ -33,7 +36,7 @@ function Login() {
       const check = formIsValid()
       if (check.result) {
         await userServices.login({ ...user, checkbox })
-        navigate('/')
+        navigate('/', { replace: true })
       } else {
         toast.error(check.message, {
           position: toast.POSITION.BOTTOM_RIGHT,
