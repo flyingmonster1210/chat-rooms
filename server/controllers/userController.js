@@ -12,16 +12,17 @@ const register = async (req, res, next) => {
     if (body && body.username && body.password && body.email) {
       if (!await User.findOne({ username: body.username })) {
         if (!await User.findOne({ email: body.email })) {
-          const { username, email, avatar } = await User.create({
+          const { username, email, avatar, _id } = await User.create({
             ...body,
             password: hashPassword,
           })
-          res.json({
+          return res.json({
             status: true,
             message: {
               username,
               email,
               avatar,
+              _id,
             }
           })
         } else {
@@ -32,7 +33,7 @@ const register = async (req, res, next) => {
       }
     }
 
-    res.json({
+    return res.json({
       status: false,
       message: message,
     })
@@ -52,11 +53,13 @@ const login = async (req, res, next) => {
       if (user) {
         if (await bcrypt.compare(body.password, user.password)) {
           delete user.password
-          res.json({
+          return res.json({
             status: true,
             message: {
               username: user.username,
               email: user.email,
+              avatar: user.avatar,
+              _id: user._id,
             },
           })
         } else {
@@ -67,7 +70,7 @@ const login = async (req, res, next) => {
       }
     }
 
-    res.json({
+    return res.json({
       status: false,
       message: message,
     })
@@ -77,9 +80,40 @@ const login = async (req, res, next) => {
   }
 }
 
+const setAvatar = async (req, res, next) => {
+  try {
+    const body = req.body
+    const params = req.params
+
+    let message = 'Missing required field(s).'
+    if (body.avatar && params.id) {
+      const { avatar } = await User.findByIdAndUpdate(params.id, { avatar: body.avatar })
+      if (avatar) {
+        return res.json({
+          status: true,
+          message: avatar,
+        })
+      } else {
+        message = 'No new avatar returned from mongoDB.'
+      }
+    } else {
+      message = `User in mongoDB with _id:${params.id} not found.`
+    }
+
+    return res.json({
+      status: false,
+      message: message,
+    })
+  } catch (error) {
+    console.error(error.message)
+    next(error)
+  }
+}
+
 
 module.exports = {
   login,
   register,
+  setAvatar,
 }
 
