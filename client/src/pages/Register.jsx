@@ -23,7 +23,7 @@ function Register() {
       const check = formIsValid()
       if (check.result) {
         await userServices.register(user)
-        navigate('/')
+        navigate('/avatar', { replace: true })
       } else {
         toast.error(check.message, {
           position: toast.POSITION.BOTTOM_RIGHT,

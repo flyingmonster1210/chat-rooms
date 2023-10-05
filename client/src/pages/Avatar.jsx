@@ -2,11 +2,12 @@ import { AvatarGenerator } from 'random-avatar-generator'
 import { styles } from '../style'
 import { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
+import userServices from '../services/userServices'
 
 function Avatar() {
   const generator = new AvatarGenerator()
   const [avatars, setAvatars] = useState()
-  const [selectedAvatar, setSelectedAvatar] = useState()
+  const [selectedAvatar, setSelectedAvatar] = useState() // index: number, value: any
 
   const getAvatars = async (num) => {
     let values = []
@@ -41,10 +42,17 @@ function Avatar() {
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
     const check = isValid()
     if (check.result) {
-      console.log('success')
+      const { _id } = await userServices.getLocalUserData()
+      const newUserData = await userServices.setAvatar({
+        _id,
+        avatar: selectedAvatar.value,
+      })
+      userServices.setLocalUserData(newUserData)
     } else {
       toast.error(check.message, {
         position: toast.POSITION.BOTTOM_RIGHT,
