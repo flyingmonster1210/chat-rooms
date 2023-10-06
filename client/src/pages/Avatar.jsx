@@ -82,8 +82,9 @@ function Avatar() {
               onClick={() =>
                 setSelectedAvatar({ index: index, value: avatar.value })
               }
-              className={`${
-                index === selectedAvatar?.index && 'border-8 border-orange-500'
+              className={`transition ease-out duration-300 ${
+                index === selectedAvatar?.index &&
+                'ring-[0.5rem] ring-orange-500'
               } max-h-[8rem] rounded-full p-[0.5rem]`}
             />
           ))}
