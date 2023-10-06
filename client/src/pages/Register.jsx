@@ -5,10 +5,12 @@ import 'react-toastify/dist/ReactToastify.css'
 import { styles } from '../style'
 import logo from '../assets/java-script.png'
 import userServices from '../services/userServices'
+import Spinner from '../components/Spinner'
 
 function Register() {
   const navigate = useNavigate()
 
+  const [isPending, setIsPending] = useState(true)
   const [user, setUser] = useState({
     username: '',
     password: '',
@@ -87,7 +89,13 @@ function Register() {
 
   return (
     <>
-      <div id="register-page" className={styles.page}>
+      {isPending && <Spinner />}
+      <div
+        id="register-page"
+        onLoad={() => setIsPending(false)}
+        onError={() => setIsPending(false)}
+        className={styles.page}
+      >
         <form onSubmit={handleSubmit} className={`${styles.form} text-white`}>
           <div className="flex flex-row items-center justify-center">
             <img src={logo} alt="Logo" className="h-[5rem]" />

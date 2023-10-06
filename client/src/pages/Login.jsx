@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { styles } from '../style'
 import logo from '../assets/java-script.png'
 import userServices from '../services/userServices'
+import Spinner from '../components/Spinner'
 
 function Login() {
   const navigate = useNavigate()
@@ -13,6 +14,7 @@ function Login() {
     username: '',
     password: '',
   })
+  const [isPending, setIsPending] = useState(true)
   const [checkbox, setCheckbox] = useState(false)
 
   const setUpRemeberMe = async () => {
@@ -81,7 +83,13 @@ function Login() {
 
   return (
     <>
-      <div id="login-page" className={styles.page}>
+      {isPending && <Spinner />}
+      <div
+        id="login-page"
+        onLoad={() => setIsPending(false)}
+        onError={() => setIsPending(false)}
+        className={styles.page}
+      >
         <form
           onSubmit={handleSubmit}
           className={`${styles.form} items-center text-white`}

@@ -1,20 +1,23 @@
 import { AvatarGenerator } from 'random-avatar-generator'
 import { styles } from '../style'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import userServices from '../services/userServices'
 import { useNavigate } from 'react-router-dom'
+import Spinner from '../components/Spinner'
 
 function Avatar() {
   const navigate = useNavigate()
 
   const generator = new AvatarGenerator()
   const [avatars, setAvatars] = useState()
+  const [isPending, setIsPending] = useState(true)
   const [selectedAvatar, setSelectedAvatar] = useState() // index: number, value: any
 
   const getAvatars = async (num) => {
     let values = []
     let promises = []
+    setIsPending(true)
     try {
       for (let i = 0; i < num; i++) {
         const value = Math.round(Math.random() * 1000)
@@ -65,14 +68,15 @@ function Avatar() {
     }
   }
 
-  const getNewAvatars = () => {
-    setSelectedAvatar()
-    getAvatars(5)
-  }
-
   return (
     <>
-      <div id="set-avatar-page" className={styles.page}>
+      {isPending && <Spinner />}
+      <div
+        id="set-avatar-page"
+        onLoad={() => setIsPending(false)}
+        onError={() => setIsPending(false)}
+        className={styles.page}
+      >
         <div className="flex flex-row flex-wrap items-center space-x-6 m-[2rem]">
           {avatars?.map((avatar, index) => (
             <img
@@ -89,7 +93,13 @@ function Avatar() {
             />
           ))}
         </div>
-        <button onClick={getNewAvatars} className="text-white">
+        <button
+          onClick={() => {
+            setSelectedAvatar()
+            getAvatars(5)
+          }}
+          className="text-white"
+        >
           Get Another Set of Avatars
         </button>
         <button onClick={handleSubmit} className={styles.button}>
