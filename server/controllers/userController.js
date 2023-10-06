@@ -110,10 +110,41 @@ const setAvatar = async (req, res, next) => {
   }
 }
 
+const getAllUsersExceptMe = async (req, res, next) => {
+  try {
+    const params = req.params
+
+    let message = 'Missing required field(s).'
+    if (params && params.id) {
+      const users = await User.find({ _id: { $ne: req.params.id } }).select([
+        'email',
+        'username',
+        'avatar',
+        '_id',
+      ])
+      return res.json({
+        status: true,
+        message: users,
+      })
+    }
+    else {
+      return res.json({
+        status: false,
+        message: message,
+      })
+    }
+
+  } catch (error) {
+    console.error(error)
+    next(error)
+  }
+}
+
 
 module.exports = {
   login,
   register,
   setAvatar,
+  getAllUsersExceptMe,
 }
 
