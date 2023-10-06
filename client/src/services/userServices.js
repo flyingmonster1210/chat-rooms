@@ -47,7 +47,7 @@ const setAvatar = async ({ _id, avatar }) => {
   try {
     const { data } = await axios.put(`${BASE_URL}/setAvatar/${_id}`, { avatar })
     if (data.status) {
-      const userData = await getLocalUserData()
+      const userData = getLocalUserData()
       const newUserData = { ...userData, avatar: data.message }
       setLocalUserData(newUserData)
       return newUserData

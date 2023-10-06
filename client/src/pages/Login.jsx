@@ -17,8 +17,8 @@ function Login() {
   const [isPending, setIsPending] = useState(true)
   const [checkbox, setCheckbox] = useState(false)
 
-  const setUpRemeberMe = async () => {
-    const localUserData = await userServices.getLocalUserData()
+  useEffect(() => {
+    const localUserData = userServices.getLocalUserData()
     if (localUserData && localUserData.username && localUserData.password) {
       setCheckbox(true)
       setUser({
@@ -26,9 +26,6 @@ function Login() {
         password: localUserData.password,
       })
     }
-  }
-  useEffect(() => {
-    setUpRemeberMe()
   }, [])
 
   const handleSubmit = async (e) => {

@@ -36,23 +36,12 @@ function Avatar() {
     }
   }
 
-  const checkLoaclStore = async () => {
-    try {
-      const user = await userServices.getLocalUserData()
-      if (user) {
-        return true
-      } else {
-        navigate('/login')
-        return false
-      }
-    } catch (error) {
-      console.error(error.message)
-    }
-  }
   useEffect(() => {
-    checkLoaclStore()
-      .then(() => getAvatars(5))
-      .catch(() => navigate('/login'))
+    if (userServices.getLocalUserData()) {
+      getAvatars(5)
+    } else {
+      navigate('/login')
+    }
   }, [])
 
   const isValid = () => {
@@ -68,7 +57,7 @@ function Avatar() {
 
     const check = isValid()
     if (check.result) {
-      const { _id } = await userServices.getLocalUserData()
+      const { _id } = userServices.getLocalUserData()
       const newUserData = await userServices.setAvatar({
         _id,
         avatar: selectedAvatar.value,
