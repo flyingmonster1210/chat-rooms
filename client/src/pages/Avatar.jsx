@@ -36,8 +36,23 @@ function Avatar() {
     }
   }
 
+  const checkLoaclStore = async () => {
+    try {
+      const user = await userServices.getLocalUserData()
+      if (user) {
+        return true
+      } else {
+        navigate('/login')
+        return false
+      }
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
   useEffect(() => {
-    getAvatars(5)
+    checkLoaclStore()
+      .then(() => getAvatars(5))
+      .catch(() => navigate('/login'))
   }, [])
 
   const isValid = () => {
