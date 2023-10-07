@@ -1,6 +1,11 @@
 const bcrypt = require('bcrypt')
 const User = require('../models/userModel')
 
+/*
+ * @Desc:  Create an new account
+ * @Route: POST /register
+ * @Param: req.body
+ */
 const register = async (req, res, next) => {
   try {
     const body = req.body
@@ -43,6 +48,11 @@ const register = async (req, res, next) => {
   }
 }
 
+/*
+ * @Desc:  User login
+ * @Route: POST /login
+ * @Param: req.body  
+ */
 const login = async (req, res, next) => {
   try {
     const body = req.body
@@ -80,6 +90,11 @@ const login = async (req, res, next) => {
   }
 }
 
+/*
+ * @Desc:  Set user's avatar value
+ * @Route: PUT /setAvatar/:id
+ * @Param: req.body, req.params 
+ */
 const setAvatar = async (req, res, next) => {
   try {
     const body = req.body
@@ -110,6 +125,11 @@ const setAvatar = async (req, res, next) => {
   }
 }
 
+/*
+ * @Desc:  Get All users info except the caller
+ * @Route: GET /getAllExceptMe/:id
+ * @Param: req.params 
+ */
 const getAllUsersExceptMe = async (req, res, next) => {
   try {
     const params = req.params
@@ -139,7 +159,6 @@ const getAllUsersExceptMe = async (req, res, next) => {
     next(error)
   }
 }
-
 
 module.exports = {
   login,
