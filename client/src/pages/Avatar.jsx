@@ -9,6 +9,7 @@ import Spinner from '../components/Spinner'
 function Avatar() {
   const navigate = useNavigate()
 
+  // https://www.npmjs.com/package/random-avatar-generator
   const generator = new AvatarGenerator()
   const [avatars, setAvatars] = useState()
   const [isPending, setIsPending] = useState(true)

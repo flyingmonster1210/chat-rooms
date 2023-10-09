@@ -61,12 +61,28 @@ const setAvatar = async ({ _id, avatar }) => {
   }
 }
 
+const getAllUsersExceptMe = async (_id) => {
+  try {
+    const { data } = await axios.get(`${BASE_URL}/getAllExceptMe/${_id}`)
+    if (data.status) {
+      return data.message
+    }
+    else {
+      throw new Error(data.message)
+    }
+  } catch (error) {
+    console.error(error.message || error)
+    throw new Error(error.message || error)
+  }
+}
+
 const userServices = {
   register,
   login,
   setAvatar,
   getLocalUserData,
   setLocalUserData,
+  getAllUsersExceptMe,
 }
 
 export default userServices

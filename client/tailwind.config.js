@@ -5,8 +5,15 @@ module.exports = {
     extend: {
       fontFamily: {
         "josefin-sans": ['Josefin Sans', 'sans-serif']
-        // font-family: 'Josefin Sans', sans-serif;
-      }
+      },
+      colors: {
+        lightBlue: '#3333ff',
+        darkPurple: '#333399',
+        darkerBlue: '#131339',
+        darkBlue: '#19194d',
+        veryDarkBlue: '#00001a',
+        lightPurple: '#ccccff',
+      },
     },
   },
   plugins: [],
