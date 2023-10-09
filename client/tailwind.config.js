@@ -13,6 +13,7 @@ module.exports = {
         darkBlue: '#19194d',
         veryDarkBlue: '#00001a',
         lightPurple: '#ccccff',
+        hoverShadow: '#3B3B3B',
       },
     },
   },

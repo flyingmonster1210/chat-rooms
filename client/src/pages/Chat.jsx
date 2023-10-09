@@ -1,14 +1,21 @@
 import { styles } from '../style'
 import { AvatarGenerator } from 'random-avatar-generator'
 import logo from '../assets/java-script.png'
+import shutdown from '../assets/power-button.png'
 import { useEffect, useState } from 'react'
 import userServices from '../services/userServices'
 import Spinner from '../components/Spinner'
+import Welcome from '../components/Welcome'
+import ChatRoom from '../components/ChatRoom'
+import { useNavigate } from 'react-router-dom'
 
 function Chat() {
+  const navigate = useNavigate()
+
   const generator = new AvatarGenerator()
   const [me, setMe] = useState()
   const [userList, setUserList] = useState([])
+  const [selectedIndex, setSelectedIndex] = useState(null)
   const [isPending, setIsPending] = useState(true)
 
   const getUserListFromDB = async () => {
@@ -25,8 +32,12 @@ function Chat() {
 
   const getMeFromLocal = () => {
     const local = userServices.getLocalUserData()
-    local.avatar = generator.generateRandomAvatar(local.avatar)
-    setMe(local)
+    if (local && local.username) {
+      local.avatar = generator.generateRandomAvatar(local.avatar)
+      setMe(local)
+    } else {
+      navigate('/login')
+    }
   }
   useEffect(() => {
     getMeFromLocal()
@@ -56,7 +67,7 @@ function Chat() {
               className="flex flex-row flex-wrap items-center space-x-1 pt-2"
             >
               <img src={logo} alt="LOGO" className="w-[3rem]" />
-              <span className="font-bold">Chat Rooms</span>
+              <span className="font-bold">Chat Room</span>
             </div>
 
             <div
@@ -66,7 +77,14 @@ function Chat() {
               {userList.map((user, index) => (
                 <div
                   key={`${index}-${user.username}`}
-                  className="flex flex-row flex-wrap items-center space-x-2 bg-gray-600 rounded-md w-full py-2 px-2 hover:cursor-pointer"
+                  onClick={() =>
+                    index === selectedIndex
+                      ? setSelectedIndex(null)
+                      : setSelectedIndex(index)
+                  }
+                  className={`${
+                    index === selectedIndex ? 'bg-hoverShadow' : ' bg-gray-600'
+                  } flex flex-row flex-wrap items-center space-x-2 rounded-md w-full py-2 px-2 hover:cursor-pointer hover:bg-hoverShadow`}
                 >
                   <img src={user.avatar} alt="Avatar" className="w-[3rem]" />
                   <span>{user.username}</span>
@@ -83,8 +101,18 @@ function Chat() {
             </div>
           </div>
 
-          <div id="right" className="flex flex-grow bg-veryDarkBlue">
-            right
+          <div id="right" className="flex flex-col flex-grow bg-veryDarkBlue">
+            <div className="flex flex-grow items-center justify-center">
+              {selectedIndex !== null ? <ChatRoom /> : <Welcome me={me} />}
+            </div>
+            <div className="flex w-full justify-end">
+              <img
+                src={shutdown}
+                alt="Shutdown"
+                title="Shutdown and return to login"
+                className="rounded-lg w-[2rem] hover:cursor-pointer"
+              />
+            </div>
           </div>
         </div>
       </div>
