@@ -1,17 +1,16 @@
 import { styles } from '../style'
 import { AvatarGenerator } from 'random-avatar-generator'
 import logo from '../assets/java-script.png'
-import shutdown from '../assets/power-button.png'
 import { useEffect, useState } from 'react'
 import userServices from '../services/userServices'
 import Spinner from '../components/Spinner'
 import Welcome from '../components/Welcome'
 import ChatRoom from '../components/ChatRoom'
 import { useNavigate } from 'react-router-dom'
+import ChatHeading from '../components/ChatHeading'
 
 function Chat() {
   const navigate = useNavigate()
-
   const generator = new AvatarGenerator()
   const [me, setMe] = useState()
   const [userList, setUserList] = useState([])
@@ -102,17 +101,14 @@ function Chat() {
           </div>
 
           <div id="right" className="flex flex-col flex-grow bg-veryDarkBlue">
-            <div className="flex flex-grow items-center justify-center">
-              {selectedIndex !== null ? <ChatRoom /> : <Welcome me={me} />}
-            </div>
-            <div className="flex w-full justify-end">
-              <img
-                src={shutdown}
-                alt="Shutdown"
-                title="Shutdown and return to login"
-                className="rounded-lg w-[2rem] hover:cursor-pointer"
-              />
-            </div>
+            <ChatHeading
+              selectedUser={
+                Number.isInteger(selectedIndex) && userList
+                  ? userList[selectedIndex]
+                  : null
+              }
+            />
+            {selectedIndex !== null ? <ChatRoom /> : <Welcome me={me} />}
           </div>
         </div>
       </div>
