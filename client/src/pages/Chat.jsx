@@ -8,6 +8,7 @@ import Welcome from '../components/Welcome'
 import ChatRoom from '../components/ChatRoom'
 import { useNavigate } from 'react-router-dom'
 import ChatHeading from '../components/ChatHeading'
+import MessageInput from '../components/MessageInput'
 
 function Chat() {
   const navigate = useNavigate()
@@ -100,7 +101,10 @@ function Chat() {
             </div>
           </div>
 
-          <div id="right" className="flex flex-col flex-grow bg-veryDarkBlue">
+          <div
+            id="right"
+            className="flex flex-col flex-grow justify-between bg-veryDarkBlue"
+          >
             <ChatHeading
               selectedUser={
                 Number.isInteger(selectedIndex) && userList
@@ -108,7 +112,14 @@ function Chat() {
                   : null
               }
             />
-            {selectedIndex !== null ? <ChatRoom /> : <Welcome me={me} />}
+            {Number.isInteger(selectedIndex) ? (
+              <>
+                <ChatRoom />
+                <MessageInput />
+              </>
+            ) : (
+              <Welcome me={me} />
+            )}
           </div>
         </div>
       </div>

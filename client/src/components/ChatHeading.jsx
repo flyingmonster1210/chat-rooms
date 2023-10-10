@@ -1,5 +1,5 @@
 import React from 'react'
-import shutdown from '../assets/power-button.png'
+import shutdown from '../assets/shutdown.png'
 
 function ChatHeading({ selectedUser }) {
   return (
@@ -21,8 +21,8 @@ function ChatHeading({ selectedUser }) {
       <img
         src={shutdown}
         alt="Shutdown"
-        title="Shutdown and return to login"
-        className="rounded-lg w-[2rem] hover:cursor-pointer"
+        title="Logout"
+        className="rounded-lg h-[1.8rem] hover:cursor-pointer"
       />
     </div>
   )
