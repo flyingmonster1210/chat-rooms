@@ -93,7 +93,7 @@ function Login() {
         >
           <div className="flex flex-row items-center justify-center">
             <img src={logo} alt="Logo" className="h-[5rem]" />
-            <h1 className="text-[3rem]">Chat Room</h1>
+            <h1 className="text-[3rem]">Chat Rooms</h1>
           </div>
           <input
             name="username"

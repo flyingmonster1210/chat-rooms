@@ -67,7 +67,7 @@ function Chat() {
               className="flex flex-row flex-wrap items-center space-x-1 pt-2"
             >
               <img src={logo} alt="LOGO" className="w-[3rem]" />
-              <span className="font-bold">Chat Room</span>
+              <span className="font-bold">Chat Rooms</span>
             </div>
 
             <div
@@ -83,8 +83,8 @@ function Chat() {
                       : setSelectedIndex(index)
                   }
                   className={`${
-                    index === selectedIndex ? 'bg-hoverShadow' : ' bg-gray-600'
-                  } flex flex-row flex-wrap items-center space-x-2 rounded-md w-full py-2 px-2 hover:cursor-pointer hover:bg-hoverShadow`}
+                    index === selectedIndex ? 'bg-darkPurple' : ' bg-[#9F85BD]'
+                  } flex flex-row flex-wrap items-center space-x-2 rounded-md w-full py-2 px-2 hover:cursor-pointer hover:bg-darkPurple`}
                 >
                   <img src={user.avatar} alt="Avatar" className="w-[3rem]" />
                   <span>{user.username}</span>
@@ -94,7 +94,7 @@ function Chat() {
 
             <div
               id="myself"
-              className="flex flex-row flex-wrap items-center w-full justify-center space-x-2 py-2 rounded-lg bg-lightBlue"
+              className="flex flex-row flex-wrap items-center w-full justify-center space-x-2 py-2 rounded-lg bg-normalIndigo"
             >
               <img src={me?.avatar} alt="My-Avatar" className="w-[4rem]" />
               <span className="text-xl">{me?.username}</span>
@@ -103,7 +103,7 @@ function Chat() {
 
           <div
             id="right"
-            className="flex flex-col flex-grow justify-between bg-veryDarkBlue"
+            className="flex flex-col flex-grow justify-start bg-veryDarkBlue"
           >
             <ChatHeading
               selectedUser={
