@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import enter from '../assets/ok.png'
 import { ToastContainer, toast } from 'react-toastify'
+import messageServices from '../services/messageServices'
 
-function MessageInput() {
+function MessageInput({ userIds }) {
   const [message, setMessage] = useState('')
 
   const handleChange = (e) => {
@@ -12,13 +13,41 @@ function MessageInput() {
       setMessage(newMessage)
     } else {
       toast.warning('Maximum length of a message is 50', {
-        position: toast.POSITION.BOTTOM_RIGHT,
+        position: toast.POSITION.BOTTOM_LEFT,
         autoClose: 2000,
       })
     }
   }
 
-  const handleSubmit = () => {}
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      if (message) {
+        if (userIds && userIds[0] && userIds[1]) {
+          const messageData = {
+            message: message,
+            users: userIds,
+            senderId: userIds[0],
+          }
+          const response = await messageServices.addMessage(messageData)
+          console.log(response)
+          setMessage('')
+        } else {
+          throw new Error("Missing user'Ids, please reload this page.")
+        }
+      } else {
+        toast.warning('Cannot send empty message.', {
+          position: toast.POSITION.BOTTOM_LEFT,
+          autoClose: 2000,
+        })
+      }
+    } catch (error) {
+      toast.error(error.message || error, {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      })
+    }
+  }
   return (
     <>
       <div className="m-1">
@@ -34,12 +63,14 @@ function MessageInput() {
             placeholder="Please type your message"
             className="flex flex-grow py-1 px-2 rounded-2xl items-center bg-lightPurple text-black"
           />
-          <img
-            src={enter}
-            alt="Enter"
-            title="Send"
-            className="h-[2rem] hover:cursor-pointer"
-          />
+          <button type="submit">
+            <img
+              src={enter}
+              alt="Enter"
+              title="Send"
+              className="h-[2rem] hover:cursor-pointer"
+            />
+          </button>
         </form>
       </div>
       <ToastContainer />

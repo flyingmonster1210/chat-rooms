@@ -115,7 +115,7 @@ function Chat() {
             {Number.isInteger(selectedIndex) ? (
               <>
                 <ChatRoom />
-                <MessageInput />
+                <MessageInput userIds={[me._id, userList[selectedIndex]._id]} />
               </>
             ) : (
               <Welcome me={me} />
