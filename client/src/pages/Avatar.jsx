@@ -1,6 +1,6 @@
 import { AvatarGenerator } from 'random-avatar-generator'
 import { styles } from '../style'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import userServices from '../services/userServices'
 import { useNavigate } from 'react-router-dom'

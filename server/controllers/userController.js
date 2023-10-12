@@ -43,8 +43,8 @@ const register = async (req, res, next) => {
       message: message,
     })
   } catch (error) {
-    console.error(error.message)
-    next(error.message)
+    console.error(error.message || error)
+    next(error.message || error)
   }
 }
 
@@ -85,8 +85,8 @@ const login = async (req, res, next) => {
       message: message,
     })
   } catch (error) {
-    console.error(error)
-    next(error)
+    console.error(error.message || error)
+    next(error.message || error)
   }
 }
 
@@ -120,8 +120,8 @@ const setAvatar = async (req, res, next) => {
       message: message,
     })
   } catch (error) {
-    console.error(error.message)
-    next(error)
+    console.error(error.message || error)
+    next(error.message || error)
   }
 }
 
@@ -155,8 +155,8 @@ const getAllUsersExceptMe = async (req, res, next) => {
     }
 
   } catch (error) {
-    console.error(error)
-    next(error)
+    console.error(error.message || error)
+    next(error.message || error)
   }
 }
 
