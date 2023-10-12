@@ -1,7 +1,14 @@
 import React from 'react'
 import shutdown from '../assets/shutdown.png'
+import { useNavigate } from 'react-router-dom'
 
 function ChatHeading({ selectedUser }) {
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    navigate('/login', { replace: true })
+  }
+
   return (
     <div
       className={`flex w-full p-1 items-center h-[3rem] ${
@@ -22,6 +29,7 @@ function ChatHeading({ selectedUser }) {
         src={shutdown}
         alt="Shutdown"
         title="Logout"
+        onClick={handleClick}
         className="rounded-lg h-[1.8rem] hover:cursor-pointer"
       />
     </div>
