@@ -7,11 +7,6 @@ const messageSchema = new mongoose.Schema(
       required: true,
     },
     users: Array,
-    senderId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
   },
   {
     timestamps: true,

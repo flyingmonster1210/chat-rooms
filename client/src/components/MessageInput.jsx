@@ -9,10 +9,10 @@ function MessageInput({ userIds }) {
   const handleChange = (e) => {
     e.preventDefault()
     const newMessage = e.target.value
-    if (newMessage.length < 50) {
+    if (newMessage.length <= 100) {
       setMessage(newMessage)
     } else {
-      toast.warning('Maximum length of a message is 50', {
+      toast.warning('Maximum length of a message is 100', {
         position: toast.POSITION.BOTTOM_LEFT,
         autoClose: 2000,
       })
@@ -24,14 +24,12 @@ function MessageInput({ userIds }) {
 
     try {
       if (message) {
-        if (userIds && userIds[0] && userIds[1]) {
+        if (userIds && userIds.length >= 2) {
           const messageData = {
             message: message,
             users: userIds,
-            senderId: userIds[0],
           }
           const response = await messageServices.addMessage(messageData)
-          console.log(response)
           setMessage('')
         } else {
           throw new Error("Missing user'Ids, please reload this page.")
@@ -43,6 +41,7 @@ function MessageInput({ userIds }) {
         })
       }
     } catch (error) {
+      console.error(error.message || error)
       toast.error(error.message || error, {
         position: toast.POSITION.BOTTOM_RIGHT,
       })

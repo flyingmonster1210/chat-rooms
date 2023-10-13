@@ -103,7 +103,7 @@ function Chat() {
 
           <div
             id="right"
-            className="flex flex-col flex-grow justify-start bg-veryDarkBlue"
+            className="flex flex-col flex-grow justify-start bg-veryDarkBlue overflow-x-auto"
           >
             <ChatHeading
               selectedUser={
@@ -114,7 +114,7 @@ function Chat() {
             />
             {Number.isInteger(selectedIndex) ? (
               <>
-                <ChatRoom />
+                <ChatRoom userIds={[me._id, userList[selectedIndex]._id]} />
                 <MessageInput userIds={[me._id, userList[selectedIndex]._id]} />
               </>
             ) : (
