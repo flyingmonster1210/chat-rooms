@@ -24,12 +24,14 @@ const io = socket(server, {
 
 global.onlineUsers = new Map()
 io.on('connection', (socket) => {
-  console.log('a user connected')
+  console.log('connection')
+
   global.chatSocket = socket
 
   // Once the user login, put the userId into onlineUsers map
-  socket.on('add-user', (userId) => {
-    onlineUsers.set(userId, socket.id)
+  socket.on('user-online', (userId) => {
+    console.log('user login, userId = ', userId)
+    // onlineUsers.set(userId, socket.id)
   })
 
   // Once the user send a message, send the message to the user
@@ -39,6 +41,10 @@ io.on('connection', (socket) => {
     if (recipient) {
       socket.to(recipient).emit('message-recieve', data.message)
     }
+  })
+
+  socket.on('user-offline', (userId) => {
+    console.log('user logout, userId = ', userId)
   })
 })
 

@@ -1,7 +1,7 @@
 import { styles } from '../style'
 import { AvatarGenerator } from 'random-avatar-generator'
 import logo from '../assets/java-script.png'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import userServices from '../services/userServices'
 import Spinner from '../components/Spinner'
 import Welcome from '../components/Welcome'
@@ -9,8 +9,10 @@ import ChatRoom from '../components/ChatRoom'
 import { useNavigate } from 'react-router-dom'
 import ChatHeading from '../components/ChatHeading'
 import MessageInput from '../components/MessageInput'
+import io from 'socket.io-client'
 
 function Chat() {
+  const socket = useRef()
   const navigate = useNavigate()
   const generator = new AvatarGenerator()
   const [me, setMe] = useState()
@@ -21,9 +23,9 @@ function Chat() {
   const getUserListFromDB = async () => {
     try {
       const list = await userServices.getAllUsersExceptMe(me._id)
-      list.map((item) => {
-        item.avatar = generator.generateRandomAvatar(item.avatar)
-      })
+      list.map(
+        (item) => (item.avatar = generator.generateRandomAvatar(item.avatar))
+      )
       setUserList(list)
     } catch (error) {
       console.error(error.message)
@@ -45,6 +47,9 @@ function Chat() {
   useEffect(() => {
     if (me && me._id) {
       getUserListFromDB()
+
+      socket.current = io('http://localhost:5050')
+      socket.current.emit('user-online', me._id)
     }
   }, [me])
 
