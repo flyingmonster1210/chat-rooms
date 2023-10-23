@@ -43,7 +43,7 @@ function Avatar() {
     } else {
       navigate('/login')
     }
-  }, [])
+  }, [navigate])
 
   const isValid = () => {
     if (selectedAvatar && selectedAvatar.index && selectedAvatar.value) {
