@@ -1,24 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
 function ChatRoom({ userIds, messageList }) {
-  // const [newMessage, setNewMessage] = useState(null)
-  // const [reload, setReload] = useState(false)
-
-  // useEffect(() => {
-  //   socketRef.current.on('recieve-message', (msg) => {
-  //     setNewMessage(msg)
-  //   })
-  // }, [])
-  //
-  // useEffect(() => {
-  //   if (newMessage) {
-  //     messageList.push(newMessage)
-  //     setMessageList(messageList)
-  //     setReload(!reload)
-  //   }
-  // }, [newMessage])
-  // useEffect(() => {}, [reload])
-
   return (
     <div className="flex flex-grow items-center justify-center max-w-full break-words">
       {messageList && messageList.length > 0 ? (

@@ -22,6 +22,8 @@ function Chat() {
   const [selectedIndex, setSelectedIndex] = useState(null)
   const [isPending, setIsPending] = useState(true)
   const [messageList, setMessageList] = useState([])
+  const [newMessage, setNewMessage] = useState(null)
+  const [reload, setReload] = useState(false)
 
   const getUserListFromDB = async () => {
     try {
@@ -71,8 +73,12 @@ function Chat() {
       getUserListFromDB()
       socketRef.current = io('http://localhost:5050')
       socketRef.current.emit('user-online', me._id)
+      socketRef.current.on('recieve-message', (msg) => {
+        setNewMessage(msg)
+      })
     }
   }, [me])
+
   // Get the messages between me and the seleted user
   useEffect(() => {
     if (
@@ -85,6 +91,15 @@ function Chat() {
       getMessageListFromDB()
     }
   }, [selectedIndex])
+  // If new message, reload chatRoom
+  useEffect(() => {
+    if (newMessage) {
+      messageList.push(newMessage)
+      setMessageList(messageList)
+      setReload(!reload)
+    }
+  }, [newMessage])
+  useEffect(() => {}, [reload])
 
   return (
     <>
