@@ -31,20 +31,26 @@ io.on('connection', (socket) => {
   // Once the user login, put the userId into onlineUsers map
   socket.on('user-online', (userId) => {
     console.log('user login, userId = ', userId)
-    // onlineUsers.set(userId, socket.id)
+    console.log('socket.id: ', socket.id)
+    onlineUsers.set(userId, socket.id)
   })
 
-  // Once the user send a message, send the message to the user
-  // data = {to: userId, message: msg}
+  // Once the user send a message, update the chat room if users are online
+  // data = {from: userId, to: userId, message: msg}
   socket.on('send-message', (data) => {
+    console.log('listening send-message')
+
     const recipient = onlineUsers.get(data.to)
+    console.log('recipient: ', recipient)
     if (recipient) {
-      socket.to(recipient).emit('message-recieve', data.message)
+      console.log('user online')
+      socket.to(recipient).emit('recieve-message', { sender: data.from, message: data.message })
     }
   })
 
   socket.on('user-offline', (userId) => {
     console.log('user logout, userId = ', userId)
+    onlineUsers.delete(userId)
   })
 })
 

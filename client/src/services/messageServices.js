@@ -31,7 +31,6 @@ const getMessages = async (userIds) => {
     if (data.statue) {
       const messages = data.message.map((msg) => (
         {
-          _id: msg._id,
           message: msg.message,
           sender: msg.users[0],
         }

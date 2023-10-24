@@ -3,7 +3,7 @@ import enter from '../assets/ok.png'
 import { ToastContainer, toast } from 'react-toastify'
 import messageServices from '../services/messageServices'
 
-function MessageInput({ userIds }) {
+function MessageInput({ userIds, socketRef }) {
   const [message, setMessage] = useState('')
 
   const handleChange = (e) => {
@@ -30,6 +30,11 @@ function MessageInput({ userIds }) {
             users: userIds,
           }
           const response = await messageServices.addMessage(messageData)
+          socketRef.current.emit('send-message', {
+            from: userIds[0],
+            to: userIds[1],
+            message: message,
+          })
           setMessage('')
         } else {
           throw new Error("Missing user'Ids, please reload this page.")

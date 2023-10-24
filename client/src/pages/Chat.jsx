@@ -12,7 +12,7 @@ import MessageInput from '../components/MessageInput'
 import io from 'socket.io-client'
 
 function Chat() {
-  const socket = useRef()
+  const socketRef = useRef()
   const navigate = useNavigate()
   const generator = new AvatarGenerator()
   const [me, setMe] = useState()
@@ -47,9 +47,8 @@ function Chat() {
   useEffect(() => {
     if (me && me._id) {
       getUserListFromDB()
-
-      socket.current = io('http://localhost:5050')
-      socket.current.emit('user-online', me._id)
+      socketRef.current = io('http://localhost:5050')
+      socketRef.current.emit('user-online', me._id)
     }
   }, [me])
 
@@ -119,8 +118,14 @@ function Chat() {
             />
             {Number.isInteger(selectedIndex) ? (
               <>
-                <ChatRoom userIds={[me._id, userList[selectedIndex]._id]} />
-                <MessageInput userIds={[me._id, userList[selectedIndex]._id]} />
+                <ChatRoom
+                  userIds={[me._id, userList[selectedIndex]._id]}
+                  socketRef={socketRef}
+                />
+                <MessageInput
+                  userIds={[me._id, userList[selectedIndex]._id]}
+                  socketRef={socketRef}
+                />
               </>
             ) : (
               <Welcome me={me} />

@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react'
 import messageServices from '../services/messageServices'
 import { ToastContainer, toast } from 'react-toastify'
 
-function ChatRoom({ userIds }) {
+function ChatRoom({ userIds, socketRef }) {
   const [messageList, setMessageList] = useState([])
+  const [newMessage, setNewMessage] = useState(null)
+  const [reload, setReload] = useState(false)
 
   const getMessageListFromDB = async () => {
     try {
@@ -17,9 +19,23 @@ function ChatRoom({ userIds }) {
       })
     }
   }
+
+  useEffect(() => {
+    socketRef.current.on('recieve-message', (msg) => {
+      setNewMessage(msg)
+    })
+  }, [])
   useEffect(() => {
     getMessageListFromDB()
   }, [userIds])
+  useEffect(() => {
+    if (newMessage) {
+      messageList.push(newMessage)
+      setMessageList(messageList)
+      setReload(!reload)
+    }
+  }, [newMessage])
+  useEffect(() => {}, [reload])
 
   return (
     <>
