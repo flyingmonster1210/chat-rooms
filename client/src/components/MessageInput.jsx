@@ -1,11 +1,17 @@
-import React, { useState } from 'react'
 import enter from '../assets/ok.png'
 import { ToastContainer, toast } from 'react-toastify'
 import messageServices from '../services/messageServices'
 
-function MessageInput({ userIds, socketRef }) {
-  const [message, setMessage] = useState('')
-
+function MessageInput({
+  userIds,
+  socketRef,
+  message,
+  setMessage,
+  messageList,
+  setMessageList,
+  reload,
+  setReload,
+}) {
   const handleChange = (e) => {
     e.preventDefault()
     const newMessage = e.target.value
@@ -29,12 +35,18 @@ function MessageInput({ userIds, socketRef }) {
             message: message,
             users: userIds,
           }
-          const response = await messageServices.addMessage(messageData)
+          await messageServices.addMessage(messageData)
           socketRef.current.emit('send-message', {
             from: userIds[0],
             to: userIds[1],
             message: message,
           })
+          messageList.push({
+            message: message,
+            sender: userIds[0],
+          })
+          setMessageList(messageList)
+          setReload(!reload)
           setMessage('')
         } else {
           throw new Error("Missing user'Ids, please reload this page.")

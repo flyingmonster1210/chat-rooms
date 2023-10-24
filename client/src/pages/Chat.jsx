@@ -18,6 +18,7 @@ function Chat() {
   const navigate = useNavigate()
   const generator = new AvatarGenerator()
   const [me, setMe] = useState()
+  const [message, setMessage] = useState('')
   const [userList, setUserList] = useState([])
   const [selectedIndex, setSelectedIndex] = useState(null)
   const [isPending, setIsPending] = useState(true)
@@ -174,6 +175,12 @@ function Chat() {
                 <MessageInput
                   userIds={[me._id, userList[selectedIndex]._id]}
                   socketRef={socketRef}
+                  message={message}
+                  setMessage={setMessage}
+                  messageList={messageList}
+                  setMessageList={setMessageList}
+                  reload={reload}
+                  setReload={setReload}
                 />
               </>
             ) : (
