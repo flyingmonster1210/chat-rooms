@@ -17,28 +17,32 @@ connectDB()
 
 const io = socket(server, {
   cors: {
-    origin: 'http://localhost:5050',
+    origin: 'http://localhost:3000',
     credentials: true,
   }
 })
 
 global.onlineUsers = new Map()
 io.on('connection', (socket) => {
-  console.log('a user connected')
   global.chatSocket = socket
 
   // Once the user login, put the userId into onlineUsers map
-  socket.on('add-user', (userId) => {
+  socket.on('user-online', (userId) => {
     onlineUsers.set(userId, socket.id)
   })
 
-  // Once the user send a message, send the message to the user
-  // data = {to: userId, message: msg}
+  // Once the user send a message, update the chat room if users are online
+  // data = {from: userId, to: userId, message: msg}
   socket.on('send-message', (data) => {
+
     const recipient = onlineUsers.get(data.to)
     if (recipient) {
-      socket.to(recipient).emit('message-recieve', data.message)
+      socket.to(recipient).emit('recieve-message', { sender: data.from, message: data.message })
     }
+  })
+
+  socket.on('user-offline', (userId) => {
+    onlineUsers.delete(userId)
   })
 })
 

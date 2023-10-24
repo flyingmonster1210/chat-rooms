@@ -1,7 +1,7 @@
 import { styles } from '../style'
 import { AvatarGenerator } from 'random-avatar-generator'
 import logo from '../assets/java-script.png'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import userServices from '../services/userServices'
 import Spinner from '../components/Spinner'
 import Welcome from '../components/Welcome'
@@ -9,21 +9,29 @@ import ChatRoom from '../components/ChatRoom'
 import { useNavigate } from 'react-router-dom'
 import ChatHeading from '../components/ChatHeading'
 import MessageInput from '../components/MessageInput'
+import io from 'socket.io-client'
+import messageServices from '../services/messageServices'
+import { ToastContainer, toast } from 'react-toastify'
 
 function Chat() {
+  const socketRef = useRef()
   const navigate = useNavigate()
   const generator = new AvatarGenerator()
   const [me, setMe] = useState()
+  const [message, setMessage] = useState('')
   const [userList, setUserList] = useState([])
   const [selectedIndex, setSelectedIndex] = useState(null)
   const [isPending, setIsPending] = useState(true)
+  const [messageList, setMessageList] = useState([])
+  const [newMessage, setNewMessage] = useState(null)
+  const [reload, setReload] = useState(false)
 
   const getUserListFromDB = async () => {
     try {
       const list = await userServices.getAllUsersExceptMe(me._id)
-      list.map((item) => {
-        item.avatar = generator.generateRandomAvatar(item.avatar)
-      })
+      list.map(
+        (item) => (item.avatar = generator.generateRandomAvatar(item.avatar))
+      )
       setUserList(list)
     } catch (error) {
       console.error(error.message)
@@ -39,14 +47,61 @@ function Chat() {
       navigate('/login')
     }
   }
+
+  const getMessageListFromDB = async () => {
+    try {
+      const response = await messageServices.getMessages([
+        me._id,
+        userList[selectedIndex]._id,
+      ])
+      setMessageList(response)
+    } catch (error) {
+      console.error(error.message || error)
+      toast.error(error.message || error, {
+        position: toast.POSITION.BOTTOM_LEFT,
+        autoClose: 2000,
+      })
+    }
+  }
+
+  // Get this my info
   useEffect(() => {
     getMeFromLocal()
   }, [])
+  // Get user list from DB
   useEffect(() => {
     if (me && me._id) {
       getUserListFromDB()
+      const url = process.env.REACT_APP_SERVER_URL || 'http://localhost:5050'
+      socketRef.current = io(url)
+      socketRef.current.emit('user-online', me._id)
+      socketRef.current.on('recieve-message', (msg) => {
+        setNewMessage(msg)
+      })
     }
   }, [me])
+
+  // Get the messages between me and the seleted user
+  useEffect(() => {
+    if (
+      me &&
+      me._id &&
+      userList &&
+      selectedIndex !== null &&
+      selectedIndex !== undefined
+    ) {
+      getMessageListFromDB()
+    }
+  }, [selectedIndex])
+  // If new message, reload chatRoom
+  useEffect(() => {
+    if (newMessage) {
+      messageList.push(newMessage)
+      setMessageList(messageList)
+      setReload(!reload)
+    }
+  }, [newMessage])
+  useEffect(() => {}, [reload])
 
   return (
     <>
@@ -106,6 +161,8 @@ function Chat() {
             className="flex flex-col flex-grow justify-start bg-veryDarkBlue overflow-x-auto"
           >
             <ChatHeading
+              me={me}
+              socketRef={socketRef}
               selectedUser={
                 Number.isInteger(selectedIndex) && userList
                   ? userList[selectedIndex]
@@ -114,8 +171,20 @@ function Chat() {
             />
             {Number.isInteger(selectedIndex) ? (
               <>
-                <ChatRoom userIds={[me._id, userList[selectedIndex]._id]} />
-                <MessageInput userIds={[me._id, userList[selectedIndex]._id]} />
+                <ChatRoom
+                  userIds={[me._id, userList[selectedIndex]._id]}
+                  messageList={messageList}
+                />
+                <MessageInput
+                  userIds={[me._id, userList[selectedIndex]._id]}
+                  socketRef={socketRef}
+                  message={message}
+                  setMessage={setMessage}
+                  messageList={messageList}
+                  setMessageList={setMessageList}
+                  reload={reload}
+                  setReload={setReload}
+                />
               </>
             ) : (
               <Welcome me={me} />
@@ -123,6 +192,7 @@ function Chat() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   )
 }
