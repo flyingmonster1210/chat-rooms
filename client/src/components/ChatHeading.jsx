@@ -2,11 +2,13 @@ import React from 'react'
 import shutdown from '../assets/shutdown.png'
 import { useNavigate } from 'react-router-dom'
 
-function ChatHeading({ selectedUser }) {
+function ChatHeading({ me, selectedUser, socketRef }) {
   const navigate = useNavigate()
 
   const handleClick = () => {
     navigate('/login', { replace: true })
+    const userId = me && me._id ? me._id : null
+    socketRef.current.emit('user-offline', userId)
   }
 
   return (

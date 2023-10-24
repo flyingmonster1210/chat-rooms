@@ -72,7 +72,8 @@ function Chat() {
   useEffect(() => {
     if (me && me._id) {
       getUserListFromDB()
-      socketRef.current = io('http://localhost:5050')
+      const url = process.env.REACT_APP_SERVER_URL || 'http://localhost:5050'
+      socketRef.current = io(url)
       socketRef.current.emit('user-online', me._id)
       socketRef.current.on('recieve-message', (msg) => {
         setNewMessage(msg)
@@ -160,6 +161,8 @@ function Chat() {
             className="flex flex-col flex-grow justify-start bg-veryDarkBlue overflow-x-auto"
           >
             <ChatHeading
+              me={me}
+              socketRef={socketRef}
               selectedUser={
                 Number.isInteger(selectedIndex) && userList
                   ? userList[selectedIndex]
