@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom'
 import ChatHeading from '../components/ChatHeading'
 import MessageInput from '../components/MessageInput'
 import io from 'socket.io-client'
+import messageServices from '../services/messageServices'
+import { ToastContainer, toast } from 'react-toastify'
 
 function Chat() {
   const socketRef = useRef()
@@ -19,6 +21,7 @@ function Chat() {
   const [userList, setUserList] = useState([])
   const [selectedIndex, setSelectedIndex] = useState(null)
   const [isPending, setIsPending] = useState(true)
+  const [messageList, setMessageList] = useState([])
 
   const getUserListFromDB = async () => {
     try {
@@ -41,9 +44,28 @@ function Chat() {
       navigate('/login')
     }
   }
+
+  const getMessageListFromDB = async () => {
+    try {
+      const response = await messageServices.getMessages([
+        me._id,
+        userList[selectedIndex]._id,
+      ])
+      setMessageList(response)
+    } catch (error) {
+      console.error(error.message || error)
+      toast.error(error.message || error, {
+        position: toast.POSITION.BOTTOM_LEFT,
+        autoClose: 2000,
+      })
+    }
+  }
+
+  // Get this my info
   useEffect(() => {
     getMeFromLocal()
   }, [])
+  // Get user list from DB
   useEffect(() => {
     if (me && me._id) {
       getUserListFromDB()
@@ -51,6 +73,18 @@ function Chat() {
       socketRef.current.emit('user-online', me._id)
     }
   }, [me])
+  // Get the messages between me and the seleted user
+  useEffect(() => {
+    if (
+      me &&
+      me._id &&
+      userList &&
+      selectedIndex !== null &&
+      selectedIndex !== undefined
+    ) {
+      getMessageListFromDB()
+    }
+  }, [selectedIndex])
 
   return (
     <>
@@ -120,7 +154,7 @@ function Chat() {
               <>
                 <ChatRoom
                   userIds={[me._id, userList[selectedIndex]._id]}
-                  socketRef={socketRef}
+                  messageList={messageList}
                 />
                 <MessageInput
                   userIds={[me._id, userList[selectedIndex]._id]}
@@ -133,6 +167,7 @@ function Chat() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   )
 }
