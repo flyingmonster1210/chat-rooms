@@ -72,7 +72,7 @@ function Chat() {
   useEffect(() => {
     if (me && me._id) {
       getUserListFromDB()
-      const url = process.env.REACT_APP_SERVER_URL || 'http://localhost:5050'
+      const url = process.env.REACT_APP_SERVER_URL
       socketRef.current = io(url)
       socketRef.current.emit('user-online', me._id)
       socketRef.current.on('recieve-message', (msg) => {

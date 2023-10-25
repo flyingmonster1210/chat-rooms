@@ -5,6 +5,7 @@ const connectDB = require('./db')
 const colors = require('colors')
 const requestInfo = require('./middlewares/normal')
 const dotenv = require('dotenv').config()
+const path = require('path')
 
 const port = process.env.PORT
 
@@ -54,7 +55,13 @@ app.use(express.urlencoded({ extended: false }))
 app.use('/api/users', require('./routers/userRouter'))
 app.use('/api/message', require('./routers/messageRouter'))
 
-
+if (process.env.ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/build')))
+  app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, '../', 'client', 'build', 'index.html')))
+}
+else {
+  app.get('/', (req, res) => res.send('Please go to the production mode.'))
+}
 
 
 
