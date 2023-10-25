@@ -2,9 +2,8 @@
   "name": "chat-rooms",
   "version": "1.0.0",
   "description": "",
-  "main": "./server/server.js",
   "scripts": {
-    "start": "node server/server.js",
+    "start": "npm run start --prefix server",
     "client": "npm run start --prefix client",
     "server": "npm run server --prefix server",
     "build": "npm i --prefix client && npm run build --prefix client"
