@@ -42,7 +42,7 @@ function Chat() {
   const getMeFromLocal = () => {
     const local = userServices.getLocalUserData()
     if (local && local.username) {
-      local.avatar = generator.generateRandomAvatar(local.avatar)
+      local.avatar = generator.generateRandomAvatar(Number(local.avatar))
       setMe(local)
     } else {
       navigate('/login')
