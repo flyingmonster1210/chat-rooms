@@ -1,10 +1,11 @@
 import { AvatarGenerator } from 'random-avatar-generator'
 import { styles } from '../style'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import userServices from '../services/userServices'
 import { useNavigate } from 'react-router-dom'
 import Spinner from '../components/Spinner'
+import io from 'socket.io-client'
 
 function Avatar() {
   const navigate = useNavigate()
@@ -14,6 +15,8 @@ function Avatar() {
   const [avatars, setAvatars] = useState()
   const [isPending, setIsPending] = useState(true)
   const [selectedAvatar, setSelectedAvatar] = useState() // index: number, value: any
+
+  const socketRef = useRef()
 
   const getAvatars = async (num) => {
     let values = []
@@ -39,6 +42,7 @@ function Avatar() {
 
   useEffect(() => {
     if (userServices.getLocalUserData()) {
+      socketRef.current = io(process.env.REACT_APP_SERVER_URL)
       getAvatars(5)
     } else {
       navigate('/login')
@@ -61,9 +65,12 @@ function Avatar() {
       const { _id } = userServices.getLocalUserData()
       const newUserData = await userServices.setAvatar({
         _id,
-        avatar: selectedAvatar.value,
+        avatar: Number(selectedAvatar.value),
       })
       userServices.setLocalUserData(newUserData)
+      socketRef.current.emit('new-user', () =>
+        console.log('we have a new user')
+      )
       navigate('/', { replace: true })
     } else {
       console.error('selectedAvatar: ', selectedAvatar)
