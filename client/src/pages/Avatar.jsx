@@ -50,7 +50,10 @@ function Avatar() {
   }, [navigate])
 
   const isValid = () => {
-    if (selectedAvatar && selectedAvatar.index && selectedAvatar.value) {
+    if (
+      selectedAvatar === 0 ||
+      (selectedAvatar && selectedAvatar.index && selectedAvatar.value)
+    ) {
       return { result: true, message: '' }
     } else {
       return { result: false, message: "You haven't picked your avatar!" }
