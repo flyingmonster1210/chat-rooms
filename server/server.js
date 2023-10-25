@@ -42,6 +42,10 @@ io.on('connection', (socket) => {
     }
   })
 
+  socket.on('new-user', () => {
+    socket.broadcast.emit('reload-userlist')
+  })
+
   socket.on('user-offline', (userId) => {
     onlineUsers.delete(userId)
   })

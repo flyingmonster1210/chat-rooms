@@ -30,7 +30,8 @@ function Chat() {
     try {
       const list = await userServices.getAllUsersExceptMe(me._id)
       list.map(
-        (item) => (item.avatar = generator.generateRandomAvatar(item.avatar))
+        (item) =>
+          (item.avatar = generator.generateRandomAvatar(Number(item.avatar)))
       )
       setUserList(list)
     } catch (error) {
@@ -72,11 +73,15 @@ function Chat() {
   useEffect(() => {
     if (me && me._id) {
       getUserListFromDB()
-      const url = process.env.REACT_APP_SERVER_URL
-      socketRef.current = io(url)
+      socketRef.current = io(process.env.REACT_APP_SERVER_URL)
       socketRef.current.emit('user-online', me._id)
       socketRef.current.on('recieve-message', (msg) => {
         setNewMessage(msg)
+      })
+      socketRef.current.on('reload-userlist', () => {
+        console.log('reload userlist')
+        getUserListFromDB()
+        setReload(!reload)
       })
     }
   }, [me])
@@ -115,7 +120,7 @@ function Chat() {
         <div className="flex flex-row text-white w-[80%] h-[90%] bg-darkerBlue border-2 border-veryDarkBlue">
           <div
             id="left"
-            className="flex flex-col justify-between items-center space-y-2 w-[30%] h-full"
+            className="flex flex-col justify-between items-center space-y-2 w-[30%] h-full lg:w-[25%] xl:w-[20%]"
           >
             <div
               id="logo-and-app-name"
